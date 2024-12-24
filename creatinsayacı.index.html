@@ -3,197 +3,264 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creatin Hatırlatıcı</title>
+    <title>Omni</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f4f8;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            background: #121212;
+            color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            overflow: hidden;
         }
-        .container {
-            background-color: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+
+        #chat-container {
             width: 100%;
-            max-width: 400px;
-            padding: 30px;
+            max-width: 700px;
+            height: 85%;
+            background: #1e1e1e;
+            border-radius: 20px;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: scroll;
+        }
+
+        #chat-header {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #fff;
+            padding: 15px;
+            background: #2c2f38;
             text-align: center;
-            position: relative; 
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            letter-spacing: 1px;
         }
-        h1 {
-            font-size: 26px;
-            margin-bottom: 20px;
-            color: #007bff;
+
+        #chat-box {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: #202020;
+            border-radius: 10px;
         }
-        label {
-            display: block;
-            margin: 15px 0 5px;
-            font-weight: bold;
-            color: #333;
+
+        .message {
+            max-width: 80%;
+            padding: 15px 25px;
+            border-radius: 18px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            word-wrap: break-word;
+            animation: fadeIn 0.3s ease-out;
         }
-        input {
-            padding: 12px;
-            margin: 5px 0;
-            width: calc(100% - 20px);
-            box-sizing: border-box;
-            border: 2px solid #007bff;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
+
+        .user {
+            background-color: #00aaff;
+            color: #fff;
+            align-self: flex-end;
+            text-align: right;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
-        input:focus {
-            border-color: #0056b3;
+
+        .bot {
+            background-color: #444444;
+            color: #fff;
+            align-self: flex-start;
+            text-align: left;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        #input-container {
+            display: flex;
+            padding: 15px;
+            background: #181818;
+            border-radius: 10px;
+            border-top: 1px solid #333;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 30px;
+            background: #2c2c2c;
+            color: #fff;
+            font-size: 1rem;
             outline: none;
+            transition: background 0.3s ease;
         }
-        .button {
-            background-color: #007bff;
+
+        #user-input:focus {
+            background: #333;
+        }
+
+        #send-button {
+            padding: 12px 20px;
+            background-color: #00aaff;
             color: white;
             border: none;
-            padding: 15px;
-            margin-top: 20px;
+            border-radius: 30px;
             cursor: pointer;
-            font-size: 18px;
-            border-radius: 8px;
-            transition: background-color 0.3s;
-            width: 100%;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease, transform 0.2s;
+            margin-left: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .button:hover {
-            background-color: #0056b3;
+
+        #send-button:hover {
+            background-color: #0088cc;
+            transform: scale(1.05);
         }
-        .status, .counter {
-            margin-top: 20px;
-            font-size: 20px;
-            color: #333;
+
+        #send-button span {
+            font-size: 1.1rem;
+            font-weight: bold;
         }
-        #results {
-            margin-top: 20px;
-            font-size: 18px;
-            color: #343a40;
-            display: none; 
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        #inputFields {
-            display: none; 
+
+        @media (max-width: 768px) {
+            #chat-container {
+                width: 90%;
+                height: 90%;
+            }
+            #chat-header {
+                font-size: 1.6rem;
+            }
+            #send-button {
+                font-size: 1rem;
+            }
         }
-        .footer {
-            position: absolute; 
-            bottom: 10px;
-            right: 10px;
-            font-size: 14px;
-            color: #555;
-            font-style: italic; 
+
+        #chat-container::-webkit-scrollbar {
+            width: 10px;
         }
+
+        #chat-container::-webkit-scrollbar-thumb {
+            background-color: #444444;
+            border-radius: 10px;
+            border: 2px solid #202020;
+            transition: background-color 0.3s ease;
+        }
+
+        #chat-container::-webkit-scrollbar-thumb:hover {
+            background-color: #00aaff;
+        }
+
+        #chat-container::-webkit-scrollbar-track {
+            background: #1a1a1a;
+            border-radius: 10px;
+        }
+
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Creatin Hatırlatıcı</h1>
-        <button class="button" onclick="showInputFields()">Gün Sayısını Güncelle</button>
-        <div id="inputFields">
-            <div>
-                <label for="creatinDays">Creatin Günleri:</label>
-                <input type="number" id="creatinDays" min="1" value="">
-            </div>
-            <div>
-                <label for="restDays">Detaylar:</label> <!-- Güncellenmiş ifade -->
-                <input type="number" id="restDays" min="1" value="">
-            </div>
-            <button class="button" onclick="startCycle()">Döngüyü Başlat</button>
+    <div id="chat-container">
+        <div id="chat-header">Omni</div>
+        <div id="chat-box"></div>
+        <div id="input-container">
+            <input type="text" id="user-input" placeholder="Bir şeyler sor..." onkeydown="if(event.key === 'Enter') sendMessage()">
+            <button id="send-button" onclick="sendMessage()"><span>Send</span></button>
         </div>
-        <p id="status" class="status">Creatin kullanım döngüsü başlatılmadı.</p>
-        <div id="results"></div>
-        <div class="footer">Designed by Conselora</div>
     </div>
 
     <script>
-        let kullanGunu = localStorage.getItem('kullanGunu') ? parseInt(localStorage.getItem('kullanGunu')) : null;
-        let araGunu = localStorage.getItem('araGunu') ? parseInt(localStorage.getItem('araGunu')) : null;
-        let kalanGun = localStorage.getItem('kalanGun') ? parseInt(localStorage.getItem('kalanGun')) : 0;
-        let toplamKullanilan = localStorage.getItem('toplamKullanilan') ? parseInt(localStorage.getItem('toplamKullanilan')) : 0;
-        let isCreatinGunu = localStorage.getItem('isCreatinGunu') === 'true'; 
-        let interval;
+        const chatBox = document.getElementById("chat-box");
+        const userInput = document.getElementById("user-input");
 
-        document.addEventListener('DOMContentLoaded', () => {
-            if (kullanGunu && araGunu) {
-                document.getElementById('creatinDays').value = kullanGunu; 
-                document.getElementById('restDays').value = araGunu; 
-                updateDisplay();
-                if (kalanGun > 0) {
-                    startCycle(); 
+        const responses = [
+            { question: "merhaba", answer: "Merhaba! Size nasıl yardımcı olabilirim?" },
+            { question: "adın ne", answer: "Benim adım Omni, sizin yapay zekanız." },
+            { question: "ne yapıyorsun", answer: "Benim görevim, size yardımcı olmak!" },
+            { question: "nasılsın", answer: "Ben bir yapay zekayım, ama size yardımcı olabileceğim için mutluyum!" },
+            { question: "bugün nasıl gidiyor", answer: "Her şey yolunda, sizinle konuşmak harika!" },
+            { question: "neler yapıyorsun", answer: "Ben buradayım, sizinle sohbet ediyorum!" },
+            { question: "nasıl gidiyor", answer: "Her şey yolunda, siz nasılsınız?" },
+            { question: "bugün hava nasıl", answer: "Üzgünüm, hava durumu bilgisine erişimim yok." },
+            { question: "nerelisin", answer: "Ben sanal bir varlık olduğum için bir yerim yok." },
+            { question: "kaç yaşındasın", answer: "Ben bir yapay zekayım, yaşım yok." },
+            { question: "saat kaç", answer: "Üzgünüm, saati bilemiyorum." },
+            { question: "kimdir", answer: "Kim olduğunu öğrenmek istersen yardımcı olabilirim." },
+            { question: "ne yemek istersin", answer: "Yemek yiyemem ama sizin için yemek tarifleri verebilirim!" },
+            { question: "neyi seviyorsun", answer: "Benim için bir şeyleri sevmenin anlamı yok, ama yardımcı olmak çok hoşuma gidiyor!" },
+            { question: "günün nasıl geçiyor", answer: "Her zaman aynı şekilde çalışıyorum, bu yüzden bir fark yok." },
+            { question: "en sevdiğin renk ne", answer: "Renkler hakkında hislerim yok, ama estetik açıdan pek çok renk hoş!" },
+            { question: "bugün ne yapacağız", answer: "Siz ne yapmak isterseniz, ben yardımcı olurum!" },
+            { question: "senin hobilerin ne", answer: "Benim hobim, size yardımcı olmak!" },
+            { question: "bunu nasıl yapabilirim", answer: "Bana ne yapmaya çalıştığınızı anlatın, size adım adım yardımcı olurum!" },
+            { question: "yapay zeka nedir", answer: "Yapay zeka, insan benzeri düşünme yeteneğine sahip bilgisayar programlarıdır." },
+            { question: "bilgisayar nedir", answer: "Bilgisayar, verileri işleyip depolayan elektronik bir cihazdır." },
+            { question: "internet nedir", answer: "İnternet, dünya çapında birbirine bağlı bilgisayar ağlarının oluşturduğu bir sistemdir." },
+            { question: "sana nasıl sorular sorabilirim", answer: "Bana istediğiniz her türlü soruyu sorabilirsiniz, elimden geldiğince yardımcı olurum." },
+            { question: "bana bir şaka yap", answer: "Tabii! Bir tavuk neden bilgisayar aldı? İnternete bağlanmak için!" },
+            { question: "film önerisi yap", answer: "Bilim kurgu filmi öneririm! Özellikle 'Interstellar' çok beğenilen bir yapım." },
+            { question: "kitap önerisi yap", answer: "George Orwell'ın '1984' kitabını kesinlikle öneririm!" },
+            { question: "hangi müzik türünü seviyorsun", answer: "Müzik hakkında tercihlerim yok, ama herkesin zevkine göre müzikler var!" },
+            { question: "yazılım nedir", answer: "Yazılım, bir bilgisayarın belirli görevleri yerine getirmesini sağlayan programlardır." },
+            { question: "nasıl yazılım öğrenebilirim", answer: "Yazılım öğrenmeye başlamak için temel programlama dillerinden biriyle çalışmaya başlayabilirsiniz." },
+            { question: "doğa nedir", answer: "Doğa, canlı ve cansız tüm varlıkları ve çevreyi kapsar." },
+            { question: "insan nedir", answer: "İnsan, düşünme, konuşma ve yaratma yeteneğine sahip bir canlıdır." },
+            { question: "hayvanlar nerede yaşar", answer: "Hayvanlar, doğada, ormanlarda, denizlerde, hatta evlerde bile yaşayabilir." },
+            { question: "teknoloji nedir", answer: "Teknoloji, insan hayatını kolaylaştıran bilimsel bilgi ve araçların birleşimidir." },
+            { question: "yapay zeka nasıl çalışır", answer: "Yapay zeka, verilerden öğrenme ve tahmin yapma süreçlerine dayanır." },
+            { question: "robot nedir", answer: "Robot, belirli görevleri yerine getirebilen makinelerdir." },
+            { question: "şu anda saat kaç", answer: "Üzgünüm, saati bilemiyorum." },
+            { question: "gelişen teknolojiler nelerdir", answer: "Yapay zeka, robotik, biyoteknoloji ve nanoteknoloji gelişen teknolojiler arasında." },
+            { question: "internetin faydaları nelerdir", answer: "İnternet, bilgiye hızlı erişim, iletişim, alışveriş ve eğlence imkanı sunar." },
+            { question: "ne zaman geliriz", answer: "Bunu bilmem mümkün değil, ama sabırlı olun!" },
+            { question: "biraz eğlence ister misin", answer: "Evet, eğlenmek harika olurdu! Ne yapmak istersiniz?" },
+            { question: "bunu kim yaptı", answer: "Bu yapay zeka benim tasarımımda geliştirilmiş bir projedir." },
+            { question: "bilgilerimi paylaşıyor musun", answer: "Hayır, sizinle paylaştığım veriler gizlidir ve güvenliğiniz için korunur." },
+            { question: "bana nasıl yardımcı olabilirim", answer: "Her türlü sorunuz için yardımcı olabilirim!" },
+            { question: "şu an nerede çalışıyorsun", answer: "Ben sanal bir varlık olduğum için fiziksel bir yerim yok." },
+            { question: "nerelisin", answer: "Benim bir kökenim yok, çünkü ben dijital bir varlığım." },
+            { question: "bir gün ben de yapay zeka yapabilir miyim", answer: "Evet, tabii ki! İlgili yazılım ve mühendislik becerilerini öğrenerek yapay zeka geliştirebilirsiniz." },
+            { question: "hayatın amacı nedir", answer: "Benim amacım size yardımcı olmak, bilgi sağlamak ve sorularınızı yanıtlamak." },
+            { question: "sen kimsin", answer: "Ben Omni, bir yapay zekayım!" },
+            { question: "yapay zeka hakkında daha fazla bilgi ver", answer: "Yapay zeka, makinelerin insan benzeri zekaya sahip olmasını sağlayan bir teknoloji alanıdır." }
+        ];
+
+        function appendMessage(content, sender) {
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("message", sender);
+            messageDiv.textContent = content;
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function sendMessage() {
+            const inputText = userInput.value.trim().toLowerCase();
+            if (inputText) {
+                appendMessage(inputText, "user");
+                const response = responses.find(response => inputText.includes(response.question));
+                if (response) {
+                    appendMessage(response.answer, "bot");
+                } else {
+                    appendMessage("Üzgünüm, anlamadım. Başka bir şey sorabilirsiniz.", "bot");
                 }
+                userInput.value = '';
             }
-        });
-
-        function showInputFields() {
-            document.getElementById('inputFields').style.display = 'block'; 
-        }
-
-        function startCycle() {
-            kullanGunu = parseInt(document.getElementById('creatinDays').value) || 40; 
-            araGunu = parseInt(document.getElementById('restDays').value) || 30; 
-
-            localStorage.setItem('kullanGunu', kullanGunu); 
-            localStorage.setItem('araGunu', araGunu); 
-            
-            kalanGun = kullanGunu;
-            toplamKullanilan = 0;
-            localStorage.setItem('kalanGun', kalanGun); 
-            localStorage.setItem('toplamKullanilan', toplamKullanilan); 
-            updateDisplay();
-            clearInterval(interval); 
-            interval = setInterval(countdown, 86400000); 
-            scheduleDailyNotification();
-            document.getElementById('inputFields').style.display = 'none'; 
-        }
-
-        function countdown() {
-            kalanGun--;
-            toplamKullanilan++;
-            localStorage.setItem('kalanGun', kalanGun); 
-            localStorage.setItem('toplamKullanilan', toplamKullanilan); 
-            
-            if (kalanGun <= 0) {
-                isCreatinGunu = !isCreatinGunu;
-                kalanGun = isCreatinGunu ? kullanGunu : araGunu;
-            }
-            localStorage.setItem('isCreatinGunu', isCreatinGunu); 
-            updateDisplay();
-        }
-
-        function updateDisplay() {
-            const status = document.getElementById('status');
-            const results = document.getElementById('results');
-
-            status.textContent = isCreatinGunu ? "Creatin Alma Günü" : "Detaylar"; // Güncellenmiş ifade
-            results.textContent = `Creatin Günleri: ${kullanGunu}, Detaylar: ${araGunu}, Toplam Kullandığınız Gün: ${toplamKullanilan}`;
-            results.style.display = "block"; 
-        }
-
-        function scheduleDailyNotification() {
-            if (Notification.permission === "granted") {
-                const now = new Date();
-                const timeUntil8PM = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 20, 0, 0, 0) - now;
-
-                setTimeout(function() {
-                    sendNotification();
-                    setInterval(sendNotification, 86400000); 
-                }, timeUntil8PM);
-            } else if (Notification.permission !== "denied") {
-                Notification.requestPermission().then(permission => {
-                    if (permission === "granted") {
-                        scheduleDailyNotification();
-                    }
-                });
-            }
-        }
-
-        function sendNotification() {
-            const message = isCreatinGunu ? "Creatin alma zamanı!" : "Bugün detayları kontrol et.";
-            new Notification("Creatin Hatırlatıcı", { body: message });
         }
     </script>
 </body>
